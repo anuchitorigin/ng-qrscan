@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="tertiary">
     <ion-title>
       Ionic QR Scanner
     </ion-title>
@@ -7,36 +7,53 @@
 </ion-header>
  
 <ion-content>
-  <!-- Fallback for iOS PWA -->
+
+  <!-- Access Image File in Device -->
   <input #fileinput type="file" accept="image/*;capture=camera" hidden (change)="handleFile($event)">
  
-  <!-- Trigger the file input -->
   <ion-button expand="full" (click)="captureImage()">
-    <ion-icon slot="start" name="camera"></ion-icon>
+    <ion-icon slot="start" name="qr-code-outline"></ion-icon>
     Capture Image
   </ion-button>
- 
-  <ion-button expand="full" (click)="startScan()">
-    <ion-icon slot="start" name="qr-scanner"></ion-icon>
-    Start scan
-  </ion-button>
+
+  <div fxFlex="100" fxLayoutAlign="space-around center">
+    <ion-button expand="full" *ngIf="!videoStart" 
+      (click)="toggleVideoMedia()" [disabled]="videoStart">
+      <ion-icon slot="start" name="videocam-outline"></ion-icon>
+      Open Camera
+    </ion-button>
+    <ion-button expand="full" *ngIf="videoStart"
+      (click)="toggleVideoMedia()" [disabled]="!videoStart">
+      <ion-icon slot="start" name="videocam-off-outline"></ion-icon>
+      Close Camera
+    </ion-button>
+  </div>
  
   <ion-button expand="full" (click)="reset()" color="warning" *ngIf="scanResult">
-    <ion-icon slot="start" name="refresh"></ion-icon>
+    <ion-icon slot="start" name="refresh-outline"></ion-icon>
     Reset
   </ion-button>
+
+  <!-- Video -->
+  <div class="video-row" fxFlex="100">
+    <video class="video" id="video" #video [hidden]="canvasShow" autoplay playsinline></video>
+  </div>
+  <!-- Canvas -->
+  <div class="video-row" fxFlex="100">
+    <canvas class="video" id="canvas" #canvas [hidden]="!canvasShow"></canvas>
+  </div>
  
   <!-- Shows our camera stream -->
-  <video #video [hidden]="!scanActive" width="100%"></video>
+  <!-- <video #video [hidden]="!scanActive" width="100%"></video> -->
  
   <!-- Used to render the camera stream images -->
-  <canvas #canvas hidden></canvas>
+  <!-- <canvas #canvas hidden></canvas> -->
  
   <!-- Stop our scanner preview if active -->
-  <ion-button expand="full" (click)="stopScan()" color="danger" *ngIf="scanActive">
-    <ion-icon slot="start" name="close"></ion-icon>
+  <!-- <ion-button expand="full" (click)="stopScan()" color="danger" *ngIf="scanActive">
+    <ion-icon slot="start" name="close-outline"></ion-icon>
     Stop scan
-  </ion-button>
+  </ion-button> -->
  
   <ion-card *ngIf="scanResult">
     <ion-card-header>
